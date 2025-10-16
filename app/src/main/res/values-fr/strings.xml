@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CST2335 Laboratoire 5</string>
+    <string name="app_title">CST2335 Laboratoire 5</string>
+    <string name="type_here">Écrire ici</string>
+    <string name="urgent">Urgent</string>
+    <string name="add">AJOUTER</string>
+    <string name="delete_title">Supprimer l’élément</string>
+    <string name="delete_msg">Vous voulez le supprimer ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+</resources>
