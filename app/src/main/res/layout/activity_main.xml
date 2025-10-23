@@ -1,61 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="8dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
 
-    <TextView
-        android:id="@+id/titleBar"
+    <ImageView
+        android:id="@+id/catImage"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:text="@string/app_title"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:background="#6200EE"
-        android:textSize="18sp"/>
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop" />
 
-    <ListView
-        android:id="@+id/todoList"
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp"
-        android:paddingTop="8dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/type_here"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/urgent"
-            android:layout_marginStart="8dp"/>
-
-        <Switch
-            android:id="@+id/switchUrgent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"/>
-
-        <Button
-            android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:layout_marginStart="8dp"
-            android:backgroundTint="#6200EE"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_height="8dp"
+        android:layout_gravity="bottom"
+        android:max="100"
+        android:progress="0" />
+</FrameLayout>

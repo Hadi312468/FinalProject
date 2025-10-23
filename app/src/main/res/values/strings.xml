@@ -1,11 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CST2335 Lab 5</string>
-    <string name="app_title">CST2335 Lab 5</string>
-    <string name="type_here">Type Here</string>
-    <string name="urgent">Urgent</string>
-    <string name="add">ADD</string>
-    <string name="delete_title">Delete item</string>
-    <string name="delete_msg">So you want to delete this?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="app_name">My Application 123</string>
 </resources>
