@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="Theme.AndroidLabs" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+<resources>
+    <style name="Theme.MyApplication123" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorSecondary">@color/secondary</item>
@@ -9,17 +8,10 @@
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
 
-        <item name="android:windowBackground">@color/tv_background</item>
-        <item name="android:statusBarColor">@android:color/black</item>
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:forceDarkAllowed">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowFullscreen">false</item>
 
-    <style name="Widget.CatTV.ProgressBar" parent="@android:style/Widget.ProgressBar.Horizontal">
-        <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressTint">@color/primary</item>
-        <item name="android:progressBackgroundTint">@color/progress_track</item>
+        <!-- Simple light background -->
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
-
 </resources>

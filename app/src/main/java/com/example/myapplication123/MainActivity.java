@@ -1,136 +1,160 @@
 package com.example.myapplication123;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView imageView;
-    private ProgressBar progressBar;
-    private CatImages task;
+    private ListView listView;
+    private PeopleAdapter adapter;
+    private final ArrayList<JSONObject> people = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+
         setContentView(R.layout.activity_main);
+        setTitle("CST2335 Lab 7");
 
-        imageView = findViewById(R.id.catImage);
-        progressBar = findViewById(R.id.progress);
+        listView = findViewById(R.id.people_list);
+        adapter = new PeopleAdapter(this, people);
+        listView.setAdapter(adapter);
 
-        task = new CatImages();
-        task.execute();
+        new FetchPeopleTask().execute();
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            JSONObject person = people.get(position);
+            Bundle b = toBundle(person);
+
+            View detail = findViewById(R.id.detail_container);
+            if (detail == null) {
+                Intent i = new Intent(MainActivity.this, EmptyActivity.class);
+                i.putExtras(b);
+                startActivity(i);
+            } else {
+                DetailsFragment fragment = new DetailsFragment();
+                fragment.setArguments(b);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.detail_container, fragment)
+                        .commit();
+            }
+        });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (task != null) task.cancel(true);
+    private Bundle toBundle(JSONObject o) {
+        Bundle b = new Bundle();
+        b.putString("name", o.optString("name"));
+        b.putString("height", o.optString("height"));
+        b.putString("mass", o.optString("mass"));
+        b.putString("hair_color", o.optString("hair_color"));
+        b.putString("skin_color", o.optString("skin_color"));
+        b.putString("eye_color", o.optString("eye_color"));
+        b.putString("birth_year", o.optString("birth_year"));
+        b.putString("gender", o.optString("gender"));
+        return b;
     }
 
-    class CatImages extends AsyncTask<String, Integer, String> {
-
-        private Bitmap currentBitmap = null;
-        private boolean newImageReady = false;
-
+    @SuppressLint("StaticFieldLeak")
+    private class FetchPeopleTask extends AsyncTask<Void, Void, List<JSONObject>> {
         @Override
-        protected void onPreExecute() {
-            progressBar.setMax(100);
-            progressBar.setProgress(0);
-        }
+        protected List<JSONObject> doInBackground(Void... voids) {
+            ArrayList<JSONObject> result = new ArrayList<>();
+            String next = "https://swapi.dev/api/people/?format=json";
+            try {
+                while (next != null && !isCancelled()) {
+                    URL url = new URL(next);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(10000);
+                    conn.setReadTimeout(10000);
+                    try (InputStream is = conn.getInputStream();
+                         BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
-        @Override
-        protected String doInBackground(String... params) {
-            while (!isCancelled()) {
-                try {
-                    JSONObject json = new JSONObject(httpGet("https://cataas.com/cat?json=true"));
-                    String id = json.optString("id");
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while ((line = br.readLine()) != null) sb.append(line);
 
-                    String fullImgUrl = "https://cataas.com/cat/" + id + "?width=1920&height=1080&fit=cover";
-
-                    File outFile = new File(getFilesDir(), id + ".jpg");
-                    if (outFile.exists()) {
-                        currentBitmap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
-                    } else {
-                        byte[] data = httpGetBytes(fullImgUrl);
-                        try (FileOutputStream fos = new FileOutputStream(outFile)) {
-                            fos.write(data);
+                        JSONObject root = new JSONObject(sb.toString());
+                        JSONArray arr = root.getJSONArray("results");
+                        for (int i = 0; i < arr.length(); i++) {
+                            result.add(arr.getJSONObject(i));
                         }
-                        currentBitmap = BitmapFactory.decodeFile(outFile.getAbsolutePath());
-                    }
 
-                    newImageReady = true;
-                    for (int i = 0; i <= 100 && !isCancelled(); i++) {
-                        publishProgress(i);
-                        Thread.sleep(30);
+                        next = root.isNull("next") ? null : root.optString("next", null);
+                        if (next != null && !next.contains("format=json")) {
+                            next = next + (next.contains("?") ? "&" : "?") + "format=json";
+                        }
+                    } finally {
+                        conn.disconnect();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return null;
+            return result;
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            int p = values[0];
-            progressBar.setProgress(p);
-
-            if (newImageReady && currentBitmap != null) {
-                imageView.setImageBitmap(currentBitmap);
-                newImageReady = false;
+        protected void onPostExecute(List<JSONObject> data) {
+            if (data != null && !data.isEmpty()) {
+                people.clear();
+                people.addAll(data);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(MainActivity.this, "No data received from SWAPI", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    private static class PeopleAdapter extends BaseAdapter {
+        private final ArrayList<JSONObject> data;
+        private final LayoutInflater inflater;
 
-    private String httpGet(String urlStr) throws Exception {
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(10000);
-        conn.setReadTimeout(15000);
-        try (InputStream is = new BufferedInputStream(conn.getInputStream());
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            return sb.toString();
-        } finally {
-            conn.disconnect();
+        PeopleAdapter(Context c, ArrayList<JSONObject> d) {
+            data = d;
+            inflater = LayoutInflater.from(c);
         }
-    }
 
-    private byte[] httpGetBytes(String urlStr) throws Exception {
-        URL url = new URL(urlStr);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(10000);
-        conn.setReadTimeout(20000);
-        try (InputStream is = new BufferedInputStream(conn.getInputStream())) {
-            byte[] buf = new byte[8192];
-            int read;
-            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-            while ((read = is.read(buf)) != -1) {
-                baos.write(buf, 0, read);
+        @Override public int getCount() { return data.size(); }
+        @Override public Object getItem(int position) { return data.get(position); }
+        @Override public long getItemId(int position) { return position; }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView tv;
+            if (convertView == null) {
+                tv = (TextView) inflater.inflate(R.layout.row_person, parent, false);
+            } else {
+                tv = (TextView) convertView;
             }
-            return baos.toByteArray();
-        } finally {
-            conn.disconnect();
+            tv.setText(data.get(position).optString("name", "Unknown"));
+            return tv;
         }
     }
 }
