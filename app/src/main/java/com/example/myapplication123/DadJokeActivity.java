@@ -7,12 +7,12 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DadJokeActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChildContent(R.layout.content_main);
+        setChildContent(R.layout.content_dadjoke);
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.app_name);
     }
 

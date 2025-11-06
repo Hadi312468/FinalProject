@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_choice1"
+        android:title="Choice 1"
+        android:icon="@drawable/ic_question"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1" />
+
+    <item
+        android:id="@+id/action_choice2"
+        android:title="Choice 2"
+        android:icon="@drawable/ic_chat"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2" />
+
+    <item
+        android:id="@+id/action_overflow_text"
+        android:title="Help"
+        app:showAsAction="never"
+        android:orderInCategory="100" />
+</menu>
