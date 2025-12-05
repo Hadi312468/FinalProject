@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">صورة ناسا لليوم</string>
+    <string name="version_label">الإصدار 1.0</string>
+
+    <string name="navigation_drawer_open">فتح قائمة التنقل</string>
+    <string name="navigation_drawer_close">إغلاق قائمة التنقل</string>
+
+    <string name="menu_home">الرئيسية</string>
+    <string name="menu_search">بحث عن صورة ناسا</string>
+    <string name="menu_favourites">المفضلة</string>
+    <string name="menu_settings">الإعدادات</string>
+    <string name="menu_help">مساعدة</string>
+
+    <string name="label_select_date">اختر تاريخًا:</string>
+    <string name="label_selected_date">التاريخ المحدَّد: %1$s</string>
+    <string name="label_show_tips">عرض التلميحات عند بدء التشغيل</string>
+
+    <string name="button_pick_date">اختر التاريخ</string>
+    <string name="button_search">بحث</string>
+    <string name="button_save_favourite">حفظ في المفضلة</string>
+    <string name="button_open_browser">فتح في المتصفح</string>
+    <string name="button_remove_favourite">إزالة من المفضلة</string>
+
+    <string name="error_no_date">يرجى اختيار تاريخ أولًا.</string>
+    <string name="error_loading">حدث خطأ أثناء تحميل البيانات.</string>
+    <string name="error_nothing_to_save">لا يوجد شيء لحفظه حتى الآن.</string>
+    <string name="toast_searching">جارٍ البحث عن صورة ناسا للتاريخ %1$s</string>
+    <string name="snackbar_saved">تم الحفظ في المفضلة.</string>
+    <string name="toast_deleted">تم الحذف.</string>
+    <string name="toast_removed">تمت الإزالة من المفضلة.</string>
+    <string name="toast_no_image">هذا المحتوى من ناسا ليس صورة.</string>
+
+    <string name="dialog_delete_title">حذف من المفضلة</string>
+    <string name="dialog_delete_message">هل أنت متأكد أنك تريد حذف هذا العنصر؟</string>
+
+    <string name="title_detail">تفاصيل صورة ناسا</string>
+
+    <string name="help_main">استخدم قائمة التنقل أو الأزرار للانتقال إلى البحث أو المفضلة.</string>
+    <string name="help_search">اختر تاريخًا، ثم اضغط على بحث لتحميل صورة ناسا لليوم، ثم احفظها في المفضلة.</string>
+    <string name="help_favourites">اضغط على أي عنصر لعرض التفاصيل. اضغط مع الاستمرار لحذفه.</string>
+    <string name="help_detail">تعرض هذه الشاشة معلومات الصورة وتسمح لك بفتحها في المتصفح.</string>
+    <string name="help_settings">قم بتفعيل أو إيقاف عرض التلميحات عند بدء تشغيل التطبيق.</string>
+</resources>
