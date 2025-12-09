@@ -28,7 +28,6 @@ public class SearchActivity extends BaseActivity {
     private static final String PREFS_NAME = "NasaPrefs";
     private static final String PREF_LAST_DATE = "last_date";
 
-    // Use DEMO_KEY for testing. Later replace with your own key from https://api.nasa.gov/
     private static final String API_KEY = "DEMO_KEY";
 
     private TextView txtSelectedDate, txtResultTitle, txtResultUrl;
@@ -55,7 +54,6 @@ public class SearchActivity extends BaseActivity {
 
         repository = new NasaRepository(this);
 
-        // Load last date from SharedPreferences, default to a safe date
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         currentDate = prefs.getString(PREF_LAST_DATE, "2019-07-20");
         txtSelectedDate.setText(getString(R.string.label_selected_date, currentDate));
@@ -72,7 +70,6 @@ public class SearchActivity extends BaseActivity {
             }
         });
 
-        // Open HD image URL in browser when clicked
         txtResultUrl.setOnClickListener(v -> {
             if (currentImage != null && currentImage.getHdUrl() != null && !currentImage.getHdUrl().isEmpty()) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentImage.getHdUrl()));
@@ -142,7 +139,6 @@ public class SearchActivity extends BaseActivity {
                 int code = conn.getResponseCode();
                 InputStream is;
 
-                // Use error stream if non-200
                 if (code >= 200 && code < 300) {
                     is = conn.getInputStream();
                 } else {
@@ -159,19 +155,16 @@ public class SearchActivity extends BaseActivity {
                 br.close();
 
                 if (code < 200 || code >= 300) {
-                    // Try to see if NASA sent a JSON error message
                     try {
                         JSONObject err = new JSONObject(sb.toString());
                         errorMessage = err.optString("msg", errorMessage);
                     } catch (Exception ignore) {
-                        // ignore parsing error for error body
                     }
                     return null;
                 }
 
                 JSONObject obj = new JSONObject(sb.toString());
 
-                // Some APOD entries are videos; we only handle images
                 String mediaType = obj.optString("media_type", "image");
                 if (!"image".equals(mediaType)) {
                     errorMessage = "This APOD is not an image (media_type=" + mediaType + ")";
@@ -204,7 +197,6 @@ public class SearchActivity extends BaseActivity {
                 txtResultTitle.setText(nasaImage.getTitle());
                 txtResultUrl.setText(nasaImage.getHdUrl());
             } else {
-                // Show more useful message
                 if (errorMessage == null || errorMessage.isEmpty()) {
                     Toast.makeText(SearchActivity.this,
                             R.string.error_loading, Toast.LENGTH_SHORT).show();
